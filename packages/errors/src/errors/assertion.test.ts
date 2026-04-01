@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { assertError, isError } from './assertion';
+import { assertError, isError, toError } from './assertion';
 import { NotFoundError } from './common';
 import { CustomErrorBase } from './CustomErrorBase';
 
@@ -76,4 +76,34 @@ describe('isError', () => {
       expect(isError(notError)).toBe(false);
     },
   );
+});
+
+describe('toError', () => {
+  it.each(areErrors)(
+    'should pass through error-like values as-is %#',
+    error => {
+      expect(toError(error)).toBe(error);
+    },
+  );
+
+  it.each(notErrors)(
+    'should wrap non-error values in an Error %#',
+    notError => {
+      const result = toError(notError);
+      expect(isError(result)).toBe(true);
+      expect(result).toBeInstanceOf(Error);
+      expect(result.message).toBe(`unknown error '${String(notError)}'`);
+    },
+  );
+
+  it('should preserve the original error instance', () => {
+    const original = new NotFoundError('not found');
+    expect(toError(original)).toBe(original);
+  });
+
+  it('should wrap undefined', () => {
+    const result = toError(undefined);
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toBe("unknown error 'undefined'");
+  });
 });

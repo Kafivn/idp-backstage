@@ -71,3 +71,20 @@ export function assertError(value: unknown): asserts value is ErrorLike {
     );
   }
 }
+
+/**
+ * Converts an unknown value to an {@link ErrorLike} object.
+ *
+ * If the value is already an {@link ErrorLike} object, it is returned as-is. Otherwise, a new
+ * `Error` is created with the value stringified as the message.
+ *
+ * @public
+ * @param value - an unknown value
+ * @returns an {@link ErrorLike} object
+ */
+export function toError(value: unknown): ErrorLike {
+  if (isError(value)) {
+    return value;
+  }
+  return new Error(`unknown error '${String(value)}'`) as ErrorLike;
+}
