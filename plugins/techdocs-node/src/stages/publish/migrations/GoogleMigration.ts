@@ -47,8 +47,7 @@ export class MigrateWriteStream extends Writable {
     try {
       newFile = lowerCaseEntityTripletInStoragePath(file.name);
     } catch (e) {
-      const error = toError(e);
-      this.logger.warn(error.message);
+      this.logger.warn(toError(e).message);
       next();
       return;
     }

@@ -441,8 +441,9 @@ export const createOrUpdateMetadata = async (
   try {
     json = await fs.readJson(techdocsMetadataPath);
   } catch (err) {
-    const error = toError(err);
-    const message = `Invalid JSON at ${techdocsMetadataPath} with error ${error.message}`;
+    const message = `Invalid JSON at ${techdocsMetadataPath} with error ${
+      toError(err).message
+    }`;
     logger.error(message);
     throw new Error(message);
   }
@@ -456,9 +457,10 @@ export const createOrUpdateMetadata = async (
       file.replace(`${techdocsMetadataDir}${path.sep}`, ''),
     );
   } catch (err) {
-    const error = toError(err);
     json.files = [];
-    logger.warn(`Unable to add files list to metadata: ${error.message}`);
+    logger.warn(
+      `Unable to add files list to metadata: ${toError(err).message}`,
+    );
   }
 
   await fs.writeJson(techdocsMetadataPath, json);

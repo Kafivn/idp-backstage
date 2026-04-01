@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { stringifyError, toError } from './assertion';
+import { stringifyError } from '../serialization/error';
+import { toError } from './assertion';
 
 /**
  * A base class that custom Error classes can inherit from.

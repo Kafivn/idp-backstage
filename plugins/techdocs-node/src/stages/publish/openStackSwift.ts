@@ -129,8 +129,9 @@ export class OpenStackSwiftPublish implements PublisherBase {
         isAvailable: false,
       };
     } catch (err) {
-      const error = toError(err);
-      this.logger.error(`from OpenStack client library: ${error.message}`);
+      this.logger.error(
+        `from OpenStack client library: ${toError(err).message}`,
+      );
       return {
         isAvailable: false,
       };
@@ -221,9 +222,8 @@ export class OpenStackSwiftPublish implements PublisherBase {
 
           resolve(techdocsMetadata);
         } catch (err) {
-          const error = toError(err);
-          this.logger.error(error.message);
-          reject(new Error(error.message));
+          this.logger.error(toError(err).message);
+          reject(new Error(toError(err).message));
         }
       } else {
         reject({
@@ -264,9 +264,10 @@ export class OpenStackSwiftPublish implements PublisherBase {
 
           res.send(await streamToBuffer(stream));
         } catch (err) {
-          const error = toError(err);
           this.logger.warn(
-            `TechDocs OpenStack swift router failed to serve content from container ${this.containerName} at path ${filePath}: ${error.message}`,
+            `TechDocs OpenStack swift router failed to serve content from container ${
+              this.containerName
+            } at path ${filePath}: ${toError(err).message}`,
           );
           res.status(404).send('File Not Found');
         }
@@ -296,8 +297,7 @@ export class OpenStackSwiftPublish implements PublisherBase {
       }
       return false;
     } catch (err) {
-      const error = toError(err);
-      this.logger.warn(error.message);
+      this.logger.warn(toError(err).message);
       return false;
     }
   }
@@ -316,8 +316,7 @@ export class OpenStackSwiftPublish implements PublisherBase {
           try {
             newPath = lowerCaseEntityTripletInStoragePath(file);
           } catch (e) {
-            const error = toError(e);
-            this.logger.warn(error.message);
+            this.logger.warn(toError(e).message);
             return;
           }
 
@@ -338,8 +337,9 @@ export class OpenStackSwiftPublish implements PublisherBase {
               await this.storageClient.delete(this.containerName, file);
             }
           } catch (e) {
-            const error = toError(e);
-            this.logger.warn(`Unable to migrate ${file}: ${error.message}`);
+            this.logger.warn(
+              `Unable to migrate ${file}: ${toError(e).message}`,
+            );
           }
         }, f),
       ),

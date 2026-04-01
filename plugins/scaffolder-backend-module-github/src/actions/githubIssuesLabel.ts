@@ -101,9 +101,10 @@ export function createGithubIssuesLabelAction(options: {
           },
         });
       } catch (e) {
-        const error = toError(e);
         ctx.logger.warn(
-          `Failed: adding labels to issue: '${number}' on repo: '${repo}', ${error.message}`,
+          `Failed: adding labels to issue: '${number}' on repo: '${repo}', ${
+            toError(e).message
+          }`,
         );
       }
     },

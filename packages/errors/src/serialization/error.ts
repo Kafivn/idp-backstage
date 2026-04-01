@@ -19,9 +19,7 @@ import {
   deserializeError as deserializeErrorInternal,
   serializeError as serializeErrorInternal,
 } from 'serialize-error';
-import { stringifyError } from '../errors/assertion';
-
-export { stringifyError };
+import { isError } from '../errors/assertion';
 
 /**
  * The serialized form of an Error.
@@ -88,4 +86,19 @@ export function deserializeError<T extends Error = Error>(
     result.stack = undefined;
   }
   return result;
+}
+
+/**
+ * Stringifies an error, including its name and message where available.
+ *
+ * @param error - The error.
+ * @public
+ */
+export function stringifyError(error: unknown): string {
+  if (isError(error)) {
+    const str = String(error);
+    return str !== '[object Object]' ? str : `${error.name}: ${error.message}`;
+  }
+
+  return `unknown error '${String(error)}'`;
 }

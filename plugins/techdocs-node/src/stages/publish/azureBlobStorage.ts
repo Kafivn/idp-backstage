@@ -152,9 +152,8 @@ export class AzureBlobStoragePublish implements PublisherBase {
         );
       }
     } catch (e) {
-      const error = toError(e);
       this.logger.error(
-        `from Azure Blob Storage client library: ${error.message}`,
+        `from Azure Blob Storage client library: ${toError(e).message}`,
       );
     }
 
@@ -192,9 +191,10 @@ export class AzureBlobStoragePublish implements PublisherBase {
         maxPageSize: BATCH_CONCURRENCY,
       });
     } catch (e) {
-      const error = toError(e);
       this.logger.error(
-        `Unable to list files for Entity ${entity.metadata.name}: ${error.message}`,
+        `Unable to list files for Entity ${entity.metadata.name}: ${
+          toError(e).message
+        }`,
       );
     }
 
@@ -423,8 +423,7 @@ export class AzureBlobStoragePublish implements PublisherBase {
     try {
       newPath = lowerCaseEntityTripletInStoragePath(originalPath);
     } catch (e) {
-      const error = toError(e);
-      this.logger.warn(error.message);
+      this.logger.warn(toError(e).message);
       return;
     }
 
@@ -433,8 +432,9 @@ export class AzureBlobStoragePublish implements PublisherBase {
       this.logger.debug(`Migrating ${originalPath}`);
       await this.renameBlob(originalPath, newPath, removeOriginal);
     } catch (e) {
-      const error = toError(e);
-      this.logger.warn(`Unable to migrate ${originalPath}: ${error.message}`);
+      this.logger.warn(
+        `Unable to migrate ${originalPath}: ${toError(e).message}`,
+      );
     }
   }
 

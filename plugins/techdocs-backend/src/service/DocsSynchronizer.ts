@@ -241,10 +241,9 @@ export class DocsSynchronizer {
         finish({ updated: false });
       }
     } catch (e) {
-      const error = toError(e);
       // In case of error, log and allow the user to go about their business.
       this.logger.error(
-        `Error syncing cache for ${entityTripletPath}: ${error.message}`,
+        `Error syncing cache for ${entityTripletPath}: ${toError(e).message}`,
       );
       finish({ updated: false });
     } finally {

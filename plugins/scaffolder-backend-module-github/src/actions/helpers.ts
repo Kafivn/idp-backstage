@@ -124,14 +124,15 @@ export async function createGithubRepoWithCollaboratorsAndTopics(
   try {
     newRepo = (await repoCreationPromise).data;
   } catch (e) {
-    const error = toError(e);
-    if (error.message === 'Resource not accessible by integration') {
+    if (toError(e).message === 'Resource not accessible by integration') {
       logger.warn(
         `The GitHub app or token provided may not have the required permissions to create the ${user.data.type} repository ${owner}/${repo}.`,
       );
     }
     throw new Error(
-      `Failed to create the ${user.data.type} repository ${owner}/${repo}, ${error.message}`,
+      `Failed to create the ${user.data.type} repository ${owner}/${repo}, ${
+        toError(e).message
+      }`,
     );
   }
 
@@ -174,10 +175,11 @@ export async function createGithubRepoWithCollaboratorsAndTopics(
           });
         }
       } catch (e) {
-        const error = toError(e);
         const name = extractCollaboratorName(collaborator);
         logger.warn(
-          `Skipping ${collaborator.access} access for ${name}, ${error.message}`,
+          `Skipping ${collaborator.access} access for ${name}, ${
+            toError(e).message
+          }`,
         );
       }
     }
@@ -191,8 +193,7 @@ export async function createGithubRepoWithCollaboratorsAndTopics(
         names: topics.map(t => t.toLowerCase()),
       });
     } catch (e) {
-      const error = toError(e);
-      logger.warn(`Skipping topics ${topics.join(' ')}, ${error.message}`);
+      logger.warn(`Skipping topics ${topics.join(' ')}, ${toError(e).message}`);
     }
   }
 
@@ -356,9 +357,10 @@ export async function initRepoPushAndProtect(
         requiredLinearHistory,
       });
     } catch (e) {
-      const error = toError(e);
       logger.warn(
-        `Skipping: default branch protection on '${repo}', ${error.message}`,
+        `Skipping: default branch protection on '${repo}', ${
+          toError(e).message
+        }`,
       );
     }
   }

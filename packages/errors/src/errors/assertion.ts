@@ -89,20 +89,5 @@ export function toError(value: unknown): ErrorLike {
   if (typeof value === 'string') {
     return new Error(value) as ErrorLike;
   }
-  return new Error(stringifyError(value)) as ErrorLike;
-}
-
-/**
- * Stringifies an error, including its name and message where available.
- *
- * @param error - The error.
- * @public
- */
-export function stringifyError(error: unknown): string {
-  if (isError(error)) {
-    const str = String(error);
-    return str !== '[object Object]' ? str : `${error.name}: ${error.message}`;
-  }
-
-  return `unknown error '${String(error)}'`;
+  return new Error(`unknown error '${String(value)}'`) as ErrorLike;
 }

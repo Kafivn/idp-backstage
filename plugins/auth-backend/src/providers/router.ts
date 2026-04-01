@@ -104,14 +104,17 @@ export function bindProviderRouters(
 
         targetRouter.use(`/${providerId}`, r);
       } catch (e) {
-        const error = toError(e);
         if (process.env.NODE_ENV !== 'development') {
           throw new Error(
-            `Failed to initialize ${providerId} auth provider, ${error.message}`,
+            `Failed to initialize ${providerId} auth provider, ${
+              toError(e).message
+            }`,
           );
         }
 
-        logger.warn(`Skipping ${providerId} auth provider, ${error.message}`);
+        logger.warn(
+          `Skipping ${providerId} auth provider, ${toError(e).message}`,
+        );
 
         targetRouter.use(`/${providerId}`, () => {
           // If the user added the provider under auth.providers but the clientId and clientSecret etc. were not found.

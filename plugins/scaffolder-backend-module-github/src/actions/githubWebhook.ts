@@ -173,9 +173,10 @@ export function createGithubWebhookAction(options: {
 
         ctx.logger.info(`Webhook '${webhookUrl}' created successfully`);
       } catch (e) {
-        const error = toError(e);
         ctx.logger.warn(
-          `Failed: create webhook '${webhookUrl}' on repo: '${repo}', ${error.message}`,
+          `Failed: create webhook '${webhookUrl}' on repo: '${repo}', ${
+            toError(e).message
+          }`,
         );
       }
     },
