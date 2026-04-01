@@ -35,7 +35,7 @@ export async function runGit(...args: string[]) {
       const msg = stderr?.trim() ?? `with exit code ${code}`;
       throw new Error(`git ${args[0]} failed, ${msg}`);
     }
-    throw new ForwardedError('Unknown execution error', err);
+    throw new ForwardedError('Unknown execution error', error);
   }
 }
 

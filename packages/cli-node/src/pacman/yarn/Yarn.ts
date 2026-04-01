@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  ForwardedError,
-  NotImplementedError,
-  toError,
-} from '@backstage/errors';
+import { ForwardedError, NotImplementedError } from '@backstage/errors';
 import { PackageInfo, PackageManager } from '../PackageManager';
 import { Lockfile } from '../Lockfile';
 import { YarnVersion } from './types';
@@ -96,10 +92,7 @@ function detectYarnVersion(dir?: string): Promise<YarnVersion> {
         : 'berry';
       return { version: versionString, codename };
     } catch (error) {
-      throw new ForwardedError(
-        'Failed to determine yarn version',
-        toError(error),
-      );
+      throw new ForwardedError('Failed to determine yarn version', error);
     }
   });
 
