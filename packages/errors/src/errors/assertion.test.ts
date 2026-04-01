@@ -86,24 +86,72 @@ describe('toError', () => {
     },
   );
 
-  it.each(notErrors)(
-    'should wrap non-error values in an Error %#',
-    notError => {
-      const result = toError(notError);
-      expect(isError(result)).toBe(true);
-      expect(result).toBeInstanceOf(Error);
-      expect(result.message).toBe(`unknown error '${String(notError)}'`);
-    },
-  );
-
   it('should preserve the original error instance', () => {
     const original = new NotFoundError('not found');
     expect(toError(original)).toBe(original);
+  });
+
+  it('should use strings directly as the error message', () => {
+    const result = toError('something went wrong');
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toBe('something went wrong');
+  });
+
+  it('should handle empty strings', () => {
+    const result = toError('');
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toBe('');
   });
 
   it('should wrap undefined', () => {
     const result = toError(undefined);
     expect(result).toBeInstanceOf(Error);
     expect(result.message).toBe("unknown error 'undefined'");
+  });
+
+  it('should wrap null', () => {
+    const result = toError(null);
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toBe("unknown error 'null'");
+  });
+
+  it('should wrap numbers', () => {
+    expect(toError(0).message).toBe("unknown error '0'");
+    expect(toError(42).message).toBe("unknown error '42'");
+  });
+
+  it('should wrap booleans', () => {
+    expect(toError(false).message).toBe("unknown error 'false'");
+    expect(toError(true).message).toBe("unknown error 'true'");
+  });
+
+  it('should JSON-stringify plain objects to avoid [object Object]', () => {
+    expect(toError({ name: 'e' }).message).toBe(`unknown error '{"name":"e"}'`);
+    expect(toError({ message: '' }).message).toBe(
+      `unknown error '{"message":""}'`,
+    );
+    expect(toError({ code: 404, detail: 'missing' }).message).toBe(
+      `unknown error '{"code":404,"detail":"missing"}'`,
+    );
+  });
+
+  it('should JSON-stringify arrays', () => {
+    expect(toError([]).message).toBe("unknown error '[]'");
+    expect(toError([1, 2]).message).toBe("unknown error '1,2'");
+  });
+
+  it('should handle objects with a custom toString', () => {
+    const obj = { toString: () => 'custom string' };
+    expect(toError(obj).message).toBe("unknown error 'custom string'");
+  });
+
+  it('should handle symbols', () => {
+    const result = toError(Symbol('test'));
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toBe("unknown error 'Symbol(test)'");
+  });
+
+  it('should handle BigInt', () => {
+    expect(toError(BigInt(42)).message).toBe("unknown error '42'");
   });
 });

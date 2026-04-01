@@ -86,5 +86,27 @@ export function toError(value: unknown): ErrorLike {
   if (isError(value)) {
     return value;
   }
-  return new Error(`unknown error '${String(value)}'`) as ErrorLike;
+  if (typeof value === 'string') {
+    return new Error(value) as ErrorLike;
+  }
+  const str = stringifyUnknown(value);
+  return new Error(`unknown error '${str}'`) as ErrorLike;
+}
+
+function stringifyUnknown(value: unknown): string {
+  if (value === undefined) {
+    return 'undefined';
+  }
+  if (value === null) {
+    return 'null';
+  }
+  const str = String(value);
+  if (str !== '' && str !== '[object Object]') {
+    return str;
+  }
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return str || typeof value;
+  }
 }
