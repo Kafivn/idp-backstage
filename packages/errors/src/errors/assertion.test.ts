@@ -125,18 +125,20 @@ describe('toError', () => {
     expect(toError(true).message).toBe("unknown error 'true'");
   });
 
-  it('should JSON-stringify plain objects to avoid [object Object]', () => {
-    expect(toError({ name: 'e' }).message).toBe(`unknown error '{"name":"e"}'`);
+  it('should wrap plain objects', () => {
+    expect(toError({ name: 'e' }).message).toBe(
+      "unknown error '[object Object]'",
+    );
     expect(toError({ message: '' }).message).toBe(
-      `unknown error '{"message":""}'`,
+      "unknown error '[object Object]'",
     );
     expect(toError({ code: 404, detail: 'missing' }).message).toBe(
-      `unknown error '{"code":404,"detail":"missing"}'`,
+      "unknown error '[object Object]'",
     );
   });
 
-  it('should JSON-stringify arrays', () => {
-    expect(toError([]).message).toBe("unknown error '[]'");
+  it('should wrap arrays', () => {
+    expect(toError([]).message).toBe("unknown error ''");
     expect(toError([1, 2]).message).toBe("unknown error '1,2'");
   });
 

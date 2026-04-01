@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { stringifyError } from '../serialization/error';
-import { isError } from './assertion';
+import { stringifyError, toError } from './assertion';
 
 /**
  * A base class that custom Error classes can inherit from.
@@ -63,6 +62,6 @@ export class CustomErrorBase extends Error {
       }
     }
 
-    this.cause = isError(cause) ? cause : undefined;
+    this.cause = cause !== undefined ? toError(cause) : undefined;
   }
 }

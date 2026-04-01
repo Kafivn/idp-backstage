@@ -89,24 +89,20 @@ export function toError(value: unknown): ErrorLike {
   if (typeof value === 'string') {
     return new Error(value) as ErrorLike;
   }
-  const str = stringifyUnknown(value);
-  return new Error(`unknown error '${str}'`) as ErrorLike;
+  return new Error(stringifyError(value)) as ErrorLike;
 }
 
-function stringifyUnknown(value: unknown): string {
-  if (value === undefined) {
-    return 'undefined';
+/**
+ * Stringifies an error, including its name and message where available.
+ *
+ * @param error - The error.
+ * @public
+ */
+export function stringifyError(error: unknown): string {
+  if (isError(error)) {
+    const str = String(error);
+    return str !== '[object Object]' ? str : `${error.name}: ${error.message}`;
   }
-  if (value === null) {
-    return 'null';
-  }
-  const str = String(value);
-  if (str !== '' && str !== '[object Object]') {
-    return str;
-  }
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return str || typeof value;
-  }
+
+  return `unknown error '${String(error)}'`;
 }
