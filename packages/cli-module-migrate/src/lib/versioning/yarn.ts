@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { assertError, ForwardedError } from '@backstage/errors';
+import { ForwardedError, toError } from '@backstage/errors';
 import { runOutput } from '@backstage/cli-common';
 
 const versions = new Map<string, Promise<'classic' | 'berry'>>();
@@ -32,8 +32,10 @@ export function detectYarnVersion(dir?: string): Promise<'classic' | 'berry'> {
       });
       return stdout.trim().startsWith('1.') ? 'classic' : 'berry';
     } catch (error) {
-      assertError(error);
-      throw new ForwardedError('Failed to determine yarn version', error);
+      throw new ForwardedError(
+        'Failed to determine yarn version',
+        toError(error),
+      );
     }
   });
 

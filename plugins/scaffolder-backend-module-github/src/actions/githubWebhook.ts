@@ -23,7 +23,7 @@ import {
   parseRepoUrl,
 } from '@backstage/plugin-scaffolder-node';
 import { emitterEventNames } from '@octokit/webhooks';
-import { assertError, InputError } from '@backstage/errors';
+import { InputError, toError } from '@backstage/errors';
 import { Octokit } from 'octokit';
 import { getOctokitOptions } from '../util';
 import { examples } from './githubWebhook.examples';
@@ -173,9 +173,9 @@ export function createGithubWebhookAction(options: {
 
         ctx.logger.info(`Webhook '${webhookUrl}' created successfully`);
       } catch (e) {
-        assertError(e);
+        const error = toError(e);
         ctx.logger.warn(
-          `Failed: create webhook '${webhookUrl}' on repo: '${repo}', ${e.message}`,
+          `Failed: create webhook '${webhookUrl}' on repo: '${repo}', ${error.message}`,
         );
       }
     },
