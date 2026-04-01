@@ -35,7 +35,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { createComponentRouteRef } from '../../routes';
 import { CatalogTableRow } from '../CatalogTable';
-import { DefaultCatalogPage } from './DefaultCatalogPage';
+import {
+  DefaultCatalogPage,
+  NfsDefaultCatalogPage,
+} from './DefaultCatalogPage';
 
 import { CatalogTableColumnsFunc } from '../CatalogTable/types';
 import { permissionApiRef } from '@backstage/plugin-permission-react';
@@ -365,5 +368,59 @@ describe('DefaultCatalogPage', () => {
     ).toBeInTheDocument();
     fireEvent.click(button);
     expect(screen.getByRole('presentation')).toBeVisible();
+  }, 20_000);
+});
+
+describe('NfsDefaultCatalogPage', () => {
+  const origReplaceState = window.history.replaceState;
+  beforeEach(() => {
+    window.history.replaceState = jest.fn();
+  });
+  afterEach(() => {
+    window.history.replaceState = origReplaceState;
+    jest.clearAllMocks();
+  });
+
+  const catalogApi = catalogApiMock.mock({
+    getEntities: jest.fn().mockResolvedValue({ items: [] }),
+    getEntityFacets: jest.fn().mockResolvedValue({ facets: {} }),
+    queryEntities: jest.fn().mockResolvedValue({
+      items: [],
+      totalItems: 0,
+      pageInfo: {},
+    }),
+  });
+
+  const renderWrapped = (children: ReactNode) =>
+    renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [catalogApiRef, catalogApi],
+          [identityApiRef, mockApis.identity()],
+          [storageApiRef, mockApis.storage()],
+          [starredEntitiesApiRef, new MockStarredEntitiesApi()],
+          [permissionApiRef, mockApis.permission()],
+        ]}
+      >
+        {children}
+      </TestApiProvider>,
+      {
+        mountedRoutes: {
+          '/create': createComponentRouteRef,
+          '/catalog/:namespace/:kind/:name': entityRouteRef,
+        },
+      },
+    );
+
+  it('should render catalog content without the legacy page shell', async () => {
+    const { container } = await renderWrapped(<NfsDefaultCatalogPage />);
+
+    // Wait for the catalog content to render
+    await expect(
+      screen.findByText(/All components/),
+    ).resolves.toBeInTheDocument();
+
+    // The legacy PageWithHeader renders a <header> element — verify it's absent
+    expect(container.querySelector('header')).not.toBeInTheDocument();
   }, 20_000);
 });

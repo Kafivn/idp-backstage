@@ -76,6 +76,7 @@ export type {
   ColumnBreakpoints,
 } from './components/EntityLinksCard';
 export type { SystemDiagramCardClassKey } from './components/SystemDiagramCard';
+export { NfsDefaultCatalogPage } from './components/CatalogPage';
 export type { DefaultCatalogPageProps } from './components/CatalogPage';
 export type { EntityContextMenuClassKey } from './components/EntityContextMenu';
 export type {

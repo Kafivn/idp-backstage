@@ -773,6 +773,11 @@ export function isResourceType(
 ): (entity: Entity) => boolean;
 
 // @public (undocumented)
+export function NfsDefaultCatalogPage(
+  props: DefaultCatalogPageProps,
+): JSX_2.Element;
+
+// @public (undocumented)
 export type PluginCatalogComponentsNameToClassKey = {
   PluginCatalogEntityLinksEmptyState: EntityLinksEmptyStateClassKey;
   PluginCatalogSystemDiagramCard: SystemDiagramCardClassKey;
