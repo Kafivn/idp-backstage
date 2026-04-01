@@ -1,5 +1,11 @@
 # @backstage/cli-module-build
 
+## 0.1.1-next.2
+
+### Patch Changes
+
+- c16c508: When building dist-workspaces with --always-pack, batch `yarn pack` operations to avoid packing packages and their dependencies simultaneously.
+
 ## 0.1.1-next.1
 
 ### Patch Changes

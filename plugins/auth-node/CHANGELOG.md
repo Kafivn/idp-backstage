@@ -1,5 +1,11 @@
 # @backstage/plugin-auth-node
 
+## 0.7.0-next.2
+
+### Patch Changes
+
+- 9244b70: Added `OAuthAuthenticatorLogoutResult` type. The `logout` method on `OAuthAuthenticator` can now optionally return `{ logoutUrl }` to trigger a browser redirect after sign-out. This allows providers like Auth0 to clear their session cookies by redirecting to their logout endpoint.
+
 ## 0.7.0-next.1
 
 ### Minor Changes

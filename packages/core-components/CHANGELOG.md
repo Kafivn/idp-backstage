@@ -1,5 +1,11 @@
 # @backstage/core-components
 
+## 0.18.9-next.1
+
+### Patch Changes
+
+- 58b9f3f: Use Backstage Link component for markdown anchor rendering to ensure consistent internal and external link behavior.
+
 ## 0.18.9-next.0
 
 ### Patch Changes
